@@ -15,7 +15,7 @@ pub fn addRaylib(b: *std.Build, target: std.zig.CrossTarget, optimize: std.built
     });
     raylib.linkLibC();
 
-    raylib.addIncludePath(srcdir ++ "/external/glfw/include");
+    raylib.addIncludePath(.{ .path = srcdir ++ "/external/glfw/include" });
 
     raylib.addCSourceFiles(&.{
         srcdir ++ "/raudio.c",
@@ -33,7 +33,7 @@ pub fn addRaylib(b: *std.Build, target: std.zig.CrossTarget, optimize: std.built
             raylib.linkSystemLibrary("winmm");
             raylib.linkSystemLibrary("gdi32");
             raylib.linkSystemLibrary("opengl32");
-            raylib.addIncludePath("external/glfw/deps/mingw");
+            raylib.addIncludePath(.{ .path = "external/glfw/deps/mingw" });
 
             raylib.defineCMacro("PLATFORM_DESKTOP", null);
         },
@@ -93,7 +93,7 @@ pub fn addRaylib(b: *std.Build, target: std.zig.CrossTarget, optimize: std.built
             var dir = std.fs.openDirAbsolute(cache_include, std.fs.Dir.OpenDirOptions{.access_sub_paths = true, .no_follow = true}) catch @panic("No emscripten cache. Generate it!");
             dir.close();
 
-            raylib.addIncludePath(cache_include);
+            raylib.addIncludePath(.{ .path = cache_include });
         },
         else => {
             @panic("Unsupported OS");
@@ -116,7 +116,7 @@ pub fn build(b: *std.Build) void {
 
     const lib = addRaylib(b, target, optimize);
     lib.setOutputDir(srcdir);
-    lib.install();
+    b.installArtifact(lib, .{});
 }
 
 const srcdir = struct{

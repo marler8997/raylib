@@ -14,5 +14,5 @@ pub fn build(b: *std.Build) void {
 
     const lib = raylib.addRaylib(b, target, optimize);
     lib.installHeader("src/raylib.h", "raylib.h");
-    lib.install();
+    b.installArtifact(lib);
 }
